@@ -37,7 +37,7 @@ ThingSpeak::Client::~Client()
 bool
 ThingSpeak::Client::begin(Socket* sock)
 {
-  if (m_sock != NULL) return (false);
+  if (UNLIKELY(m_sock != NULL)) return (false);
   m_sock = sock;
   return (true);
 }
@@ -45,7 +45,7 @@ ThingSpeak::Client::begin(Socket* sock)
 bool
 ThingSpeak::Client::end()
 {
-  if (m_sock == NULL) return (false);
+  if (UNLIKELY(m_sock == NULL)) return (false);
   m_sock->close();
   m_sock = NULL;
   return (true);
@@ -56,9 +56,9 @@ ThingSpeak::Client::connect()
 {
   uint8_t server[4] = { API_THINGSPEAK_COM };
   int res = m_sock->connect(server, 80);
-  if (res != 0) return (res);
+  if (UNLIKELY(res != 0)) return (res);
   while ((res = m_sock->is_connected()) == 0) delay(16);
-  if (res < 0) return (-2);
+  if (UNLIKELY(res < 0)) return (-2);
   return (0);
 }
 
@@ -88,7 +88,7 @@ ThingSpeak::Channel::post(const char* entry, str_P status)
 
   // Connect to the server
   int res = m_client->connect();
-  if (res < 0) goto error;
+  if (UNLIKELY(res < 0)) goto error;
 
   // Generate the http post request with entry and status
   page << PSTR("POST /update HTTP/1.1") << CRLF
@@ -157,7 +157,7 @@ ThingSpeak::TalkBack::execute_next_command()
 
   // Connect to the server
   int res = m_client->connect();
-  if (res < 0) goto error;
+  if (UNLIKELY(res < 0)) goto error;
 
   // Generate the http post request with talkback id and key
   page << PSTR("POST /talkbacks/") << m_id
@@ -171,7 +171,7 @@ ThingSpeak::TalkBack::execute_next_command()
 
   // Wait for the reply
   while ((res = sock->available()) == 0) delay(16);
-  if (res < 0) goto error;
+  if (UNLIKELY(res < 0)) goto error;
 
   // Parse reply header
   Command* command;
@@ -183,12 +183,12 @@ ThingSpeak::TalkBack::execute_next_command()
   do {
     sock->gets(line, sizeof(line));
   } while ((sock->available() > 0) && (strcmp_P(line, PSTR("\r"))));
-  if (sock->available() <= 0) goto error;
+  if (UNLIKELY(sock->available() <= 0)) goto error;
 
   // Parse reply length and command string
   sock->gets(line, sizeof(line));
   length = (uint8_t) strtol(line, NULL, 16);
-  if (length <= 0) goto error;
+  if (UNLIKELY(length <= 0)) goto error;
   sock->gets(line, sizeof(line));
   line[length] = 0;
 
@@ -196,7 +196,7 @@ ThingSpeak::TalkBack::execute_next_command()
   // issue an add command request
   res = -5;
   command = lookup(line);
-  if (command == NULL) goto error;
+  if (UNLIKELY(command == NULL)) goto error;
   m_client->disconnect();
   command->execute();
   return (0);
@@ -215,7 +215,7 @@ ThingSpeak::TalkBack::add_command_P(str_P string, uint8_t position)
 
   // Connect to the server
   int res = m_client->connect();
-  if (res < 0) goto error;
+  if (UNLIKELY(res < 0)) goto error;
 
   // Generate the http post request with talkback id, key, command and position
   page << PSTR("POST /talkbacks/") << m_id
@@ -231,7 +231,7 @@ ThingSpeak::TalkBack::add_command_P(str_P string, uint8_t position)
 
   // Wait for the reply
   while ((res = sock->available()) == 0) delay(16);
-  if (res < 0) goto error;
+  if (UNLIKELY(res < 0)) goto error;
 
   // Parse reply header
   char line[64];
