@@ -28,9 +28,10 @@
 class SensorHandler : public Alarm {
 public:
   SensorHandler(ThingSpeak::Channel* channel,
+		Job::Scheduler* scheduler,
 		Board::ExternalInterruptPin pin,
 		uint16_t period) :
-    Alarm(period),
+  Alarm(scheduler, period),
     m_channel(channel),
     m_sensor(pin)
   {}

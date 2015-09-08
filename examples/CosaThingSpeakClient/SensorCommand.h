@@ -43,10 +43,9 @@ SensorCommand<IS_ENABLE>::execute()
 {
   Command::execute();
   if (IS_ENABLE) {
-    m_handler->set_alarm(Alarm::time());
-    m_handler->enable();
+    m_handler->start();
   } else
-    m_handler->disable();
+    m_handler->stop();
 }
 
 #endif

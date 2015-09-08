@@ -72,6 +72,10 @@
 #include "PingCommand.h"
 #include "SensorCommand.h"
 
+// Use the default alarm scheduler
+RTC::Scheduler scheduler;
+Alarm::Scheduler alarms(&scheduler);
+
 // Ethernet controller
 static const char HOSTNAME[] __PROGMEM = "CosaThingSpeakClient";
 W5100 ethernet;
@@ -102,7 +106,7 @@ Command pong(&talkback, PONG_COMMAND);
 PingCommand ping(&talkback, &pong);
 
 // Sensor handler and commands (on/off)
-SensorHandler sensor_handler(&channel, Board::EXT0, 20);
+SensorHandler sensor_handler(&channel, &scheduler, Board::EXT0, 20);
 
 const char SENSOR_OFF_COMMAND[] __PROGMEM = "SENSOR_OFF";
 SensorCommand<false> sensor_off(&talkback, SENSOR_OFF_COMMAND, &sensor_handler);
@@ -111,10 +115,7 @@ const char SENSOR_ON_COMMAND[] __PROGMEM = "SENSOR_ON";
 SensorCommand<true> sensor_on(&talkback, SENSOR_ON_COMMAND, &sensor_handler);
 
 // Command handler
-CommandHandler command_handler(&talkback, 15);
-
-// Use the default alarm scheduler
-Alarm::Scheduler scheduler;
+CommandHandler command_handler(&talkback, &scheduler, 15);
 
 void setup()
 {
@@ -123,9 +124,10 @@ void setup()
   trace.begin(&uart, PSTR("CosaThingSpeakClient: started"));
 
   // Start the watchdog, real-time clock and the alarm scheduler
-  Watchdog::begin(16, Watchdog::push_timeout_events);
+  Watchdog::begin();
   RTC::begin();
-  scheduler.begin();
+  RTC::job(&scheduler);
+  alarms.begin();
 
   // Setup Ethernet controller and ThingSpeak with given ethernet socket
   TRACE(ethernet.begin_P(HOSTNAME));
@@ -141,13 +143,11 @@ void setup()
   talkback.add(&sensor_on);
 
   // Enable the command
-  command_handler.enable();
+  command_handler.begin();
 }
 
 void loop()
 {
   // The standard event dispatcher
-  Event event;
-  Event::queue.await(&event);
-  event.dispatch();
+  Event::service();
 }

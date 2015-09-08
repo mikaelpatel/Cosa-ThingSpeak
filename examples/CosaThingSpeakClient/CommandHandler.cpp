@@ -20,6 +20,7 @@
 
 #include "CommandHandler.h"
 #include "Cosa/Trace.hh"
+#include "Cosa/Watchdog.hh"
 
 void
 Command::execute()
