@@ -127,7 +127,7 @@ void setup()
   Watchdog::begin();
   RTC::begin();
   RTC::job(&scheduler);
-  alarms.begin();
+  alarms.start();
 
   // Setup Ethernet controller and ThingSpeak with given ethernet socket
   TRACE(ethernet.begin_P(HOSTNAME));
@@ -143,7 +143,7 @@ void setup()
   talkback.add(&sensor_on);
 
   // Enable the command
-  command_handler.begin();
+  command_handler.start();
 }
 
 void loop()
