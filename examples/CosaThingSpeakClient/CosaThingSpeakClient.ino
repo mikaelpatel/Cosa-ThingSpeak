@@ -61,6 +61,7 @@
 #include <ThingSpeak.h>
 
 #include "Cosa/RTC.hh"
+#include "Cosa/Clock.hh"
 #include "Cosa/Event.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
@@ -71,6 +72,9 @@
 #include "LEDCommand.h"
 #include "PingCommand.h"
 #include "SensorCommand.h"
+
+// Wall-clock
+Clock clock;
 
 // Ethernet controller
 static const char HOSTNAME[] __PROGMEM = "CosaThingSpeakClient";
@@ -102,7 +106,7 @@ Command pong(&talkback, PONG_COMMAND);
 PingCommand ping(&talkback, &pong);
 
 // Sensor handler and commands (on/off)
-SensorHandler sensor_handler(&channel, &RTC::clock, Board::EXT0, 20);
+SensorHandler sensor_handler(&channel, &clock, Board::EXT0, 20);
 
 const char SENSOR_OFF_COMMAND[] __PROGMEM = "SENSOR_OFF";
 SensorCommand<false> sensor_off(&talkback, SENSOR_OFF_COMMAND, &sensor_handler);
@@ -111,7 +115,7 @@ const char SENSOR_ON_COMMAND[] __PROGMEM = "SENSOR_ON";
 SensorCommand<true> sensor_on(&talkback, SENSOR_ON_COMMAND, &sensor_handler);
 
 // Command handler
-CommandHandler command_handler(&talkback, &RTC::clock, 15);
+CommandHandler command_handler(&talkback, &clock, 15);
 
 void setup()
 {
@@ -121,7 +125,7 @@ void setup()
 
   // Start the watchdog, real-time clock and the alarm scheduler
   Watchdog::begin();
-  RTC::begin();
+  RTC::begin(&clock);
 
   // Setup Ethernet controller and ThingSpeak with given ethernet socket
   TRACE(ethernet.begin_P(HOSTNAME));
