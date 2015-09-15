@@ -38,9 +38,9 @@ public:
 class CommandHandler : public Alarm {
 public:
   CommandHandler(ThingSpeak::TalkBack* talkback,
-		 Job::Scheduler* scheduler,
+		 ::Clock* clock,
 		 uint16_t period) :
-    Alarm(scheduler, period), m_talkback(talkback)
+    Alarm(clock, period), m_talkback(talkback)
   {}
   virtual void run();
 private:

@@ -61,7 +61,6 @@
 #include <ThingSpeak.h>
 
 #include "Cosa/RTC.hh"
-#include "Cosa/Clock.hh"
 #include "Cosa/Event.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
@@ -74,7 +73,7 @@
 #include "SensorCommand.h"
 
 // Wall-clock
-Clock clock;
+RTC::Clock clock;
 
 // Ethernet controller
 static const char HOSTNAME[] __PROGMEM = "CosaThingSpeakClient";
@@ -125,7 +124,7 @@ void setup()
 
   // Start the watchdog, real-time clock and the alarm scheduler
   Watchdog::begin();
-  RTC::begin(&clock);
+  RTC::begin();
 
   // Setup Ethernet controller and ThingSpeak with given ethernet socket
   TRACE(ethernet.begin_P(HOSTNAME));
