@@ -264,7 +264,7 @@ public:
       }
 
       /**
-       * @override ThingSpeak::TalkBack::Command
+       * @override{ThingSpeak::TalkBack::Command}
        * The command handler. Called by TalkBack::execute_next_command
        * when receiving a command string that matches.
        */
