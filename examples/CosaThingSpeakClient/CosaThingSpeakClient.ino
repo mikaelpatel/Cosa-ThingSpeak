@@ -60,7 +60,7 @@
 #include <W5100.h>
 #include <ThingSpeak.h>
 
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/Event.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
@@ -73,7 +73,7 @@
 #include "SensorCommand.h"
 
 // Wall-clock
-RTC::Clock clock;
+RTT::Clock clock;
 
 // Ethernet controller
 static const char HOSTNAME[] __PROGMEM = "CosaThingSpeakClient";
@@ -122,9 +122,9 @@ void setup()
   uart.begin(9600);
   trace.begin(&uart, PSTR("CosaThingSpeakClient: started"));
 
-  // Start the watchdog, real-time clock and the alarm scheduler
+  // Start the watchdog and real-time timer
   Watchdog::begin();
-  RTC::begin();
+  RTT::begin();
 
   // Setup Ethernet controller and ThingSpeak with given ethernet socket
   TRACE(ethernet.begin_P(HOSTNAME));

@@ -51,7 +51,7 @@
 #include <W5100.h>
 #include <ThingSpeak.h>
 
-#include "Cosa/RTC.hh"
+#include "Cosa/RTT.hh"
 #include "Cosa/Watchdog.hh"
 
 #ifndef NDEBUG
@@ -83,7 +83,7 @@ void setup()
   trace.begin(&uart, PSTR("CosaThingSpeakChannel: started"));
 #endif
   Watchdog::begin();
-  RTC::begin();
+  RTT::begin();
   TRACE(ethernet.begin_P(HOSTNAME));
   TRACE(client.begin(ethernet.socket(Socket::TCP)));
 }
