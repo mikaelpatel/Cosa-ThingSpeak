@@ -56,7 +56,7 @@
 
 #ifndef NDEBUG
 #include "Cosa/Trace.hh"
-#include "Cosa/IOStream/Driver/UART.hh"
+#include "Cosa/UART.hh"
 #else
 #define TRACE(x) x
 #endif
