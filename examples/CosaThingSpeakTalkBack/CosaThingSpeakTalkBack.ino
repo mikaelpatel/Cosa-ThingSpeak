@@ -129,7 +129,7 @@ void
 Ping::execute()
 {
   Command::execute();
-  m_talkback->add_command_P(m_pong->get_string());
+  m_talkback->add_command_P(m_pong->string());
 }
 
 const char PONG_COMMAND[] __PROGMEM = "PONG";

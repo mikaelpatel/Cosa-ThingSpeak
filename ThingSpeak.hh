@@ -258,7 +258,7 @@ public:
        * Return command string. It is stored in program memory.
        * @return string.
        */
-      str_P get_string() const
+      str_P string() const
       {
 	return (m_string);
       }

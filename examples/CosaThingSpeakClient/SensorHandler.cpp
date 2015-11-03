@@ -26,7 +26,7 @@ SensorHandler::run()
 {
   ThingSpeak::Entry update;
   m_sensor.sample();
-  update.set_field(1, m_sensor.get_temperature(), 1);
-  update.set_field(2, m_sensor.get_humidity(), 1);
+  update.set_field(1, m_sensor.temperature(), 1);
+  update.set_field(2, m_sensor.humidity(), 1);
   TRACE(m_channel->post(update));
 }
