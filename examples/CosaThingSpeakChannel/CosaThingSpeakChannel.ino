@@ -48,7 +48,9 @@
 #include <DHT.h>
 #include <DHCP.h>
 #include <DNS.h>
+#include <W5X00.h>
 #include <W5100.h>
+// #include <W5200.h>
 #include <ThingSpeak.h>
 
 #include "Cosa/RTT.hh"
@@ -71,6 +73,7 @@ DHT11 sensor(Board::EXT0);
 // Ethernet controller
 static const char HOSTNAME[] __PROGMEM = "CosaThingSpeakChannel";
 W5100 ethernet;
+// W5200 ethernet;
 
 // Thingspeak client
 static const char KEY[] __PROGMEM = "I3U14KLWM1R1SDPR";

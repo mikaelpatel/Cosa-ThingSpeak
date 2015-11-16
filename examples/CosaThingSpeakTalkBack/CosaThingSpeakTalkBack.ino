@@ -40,7 +40,9 @@
 
 #include <DHCP.h>
 #include <DNS.h>
+#include <W5X00.h>
 #include <W5100.h>
+// #include <W5200.h>
 #include <ThingSpeak.h>
 
 #include "Cosa/Watchdog.hh"
@@ -55,6 +57,7 @@
 // Ethernet controller
 static const char HOSTNAME[] __PROGMEM = "CosaThingSpeakTalkBack";
 W5100 ethernet;
+// W5200 ethernet;
 
 // Thingspeak client
 static const char KEY[] __PROGMEM = "72PKOHOK3DKJW2TQ";
